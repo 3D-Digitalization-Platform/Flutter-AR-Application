@@ -47,7 +47,7 @@ class ProfileScreen extends StatelessWidget {
                 height: 250,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(profile.coverImage),
+                    image: _getImageProvider(profile.coverImage),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -85,7 +85,7 @@ class ProfileScreen extends StatelessWidget {
                               offset: const Offset(0, -60),
                               child: CircleAvatar(
                                 radius: 50,
-                                backgroundImage: AssetImage(profile.profileImage),
+                                backgroundImage: _getImageProvider(profile.profileImage),
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -150,6 +150,15 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  // 🖼 Image Provider Helper
+  ImageProvider _getImageProvider(String path) {
+    if (path.startsWith('http')) {
+      return NetworkImage(path);
+    } else {
+      return AssetImage(path);
+    }
+  }
+
   // 📊 Stat Widget
   Widget _stat(String number, String title) {
     return Column(
@@ -165,7 +174,9 @@ class ProfileScreen extends StatelessWidget {
   Widget _img(String path) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
-      child: Image.asset(path, fit: BoxFit.cover),
+      child: path.startsWith('http')
+          ? Image.network(path, fit: BoxFit.cover)
+          : Image.asset(path, fit: BoxFit.cover),
     );
   }
 }
