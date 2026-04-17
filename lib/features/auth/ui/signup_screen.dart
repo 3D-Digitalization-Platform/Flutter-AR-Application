@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import '../service/auth_feature_service.dart';
+import 'widgets/auth_field.dart';
 
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+  final AuthFeatureService _authService = AuthFeatureService();
+
+  SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,62 +62,64 @@ class SignUpScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Expanded(child: field("Bruce")),
+                              Expanded(child: commonField("Bruce")),
                               const SizedBox(width: 10),
-                              Expanded(child: field("Wayne")),
+                              Expanded(child: commonField("Wayne")),
                             ],
                           ),
                           const SizedBox(height: 12),
-                          field("Email"),
+                          commonField("Email"),
                           const SizedBox(height: 12),
-                          field("Date"),
+                          commonField("Date"),
                           const SizedBox(height: 12),
-                          field("Phone"),
+                          commonField("Phone"),
                           const SizedBox(height: 12),
-                          field("Password", isPassword: true),
+                          commonField("Password", isPassword: true),
                           const SizedBox(height: 20),
 
                           SizedBox(
                             width: double.infinity,
                             height: 50,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _authService.signup("test@test.com", "password", "Bruce Wayne");
+                              },
                               child: const Text("Sign Up"),
                             ),
                           ),
                           const SizedBox(height: 20),
 
-// OR
-Row(
-  children: const [
-    Expanded(child: Divider()),
-    Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Text("or"),
-    ),
-    Expanded(child: Divider()),
-  ],
-),
+                          // OR
+                          Row(
+                            children: const [
+                              Expanded(child: Divider()),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text("or"),
+                              ),
+                              Expanded(child: Divider()),
+                            ],
+                          ),
 
-const SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
-// Google Button
-Container(
-  width: double.infinity,
-  height: 50,
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(12),
-    border: Border.all(color: Colors.grey.shade300),
-  ),
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Icon(Icons.g_mobiledata, size: 30), // temporary
-      SizedBox(width: 8),
-      Text("Sign up with Google"),
-    ],
-  ),
-),
+                          // Google Button
+                          Container(
+                            width: double.infinity,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(Icons.g_mobiledata, size: 30), // temporary
+                                SizedBox(width: 8),
+                                Text("Sign up with Google"),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -126,19 +132,4 @@ Container(
       ),
     );
   }
-}
-
-Widget field(String hint, {bool isPassword = false}) {
-  return TextField(
-    obscureText: isPassword,
-    decoration: InputDecoration(
-      hintText: hint,
-      filled: true,
-      fillColor: const Color(0xFFF5F6FA),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
-      ),
-    ),
-  );
 }

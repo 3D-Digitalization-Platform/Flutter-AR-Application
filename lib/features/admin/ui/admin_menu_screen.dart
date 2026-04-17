@@ -10,7 +10,10 @@ class AdminMenuScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFFE9EDF3),
         elevation: 0,
-        leading: const Icon(Icons.arrow_back, color: Colors.black),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
         centerTitle: true,
         title: const Text(
           "Admin",
@@ -30,7 +33,6 @@ class AdminMenuScreen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-
           /// 🔹 Icon (Admin Illustration)
           Container(
             padding: const EdgeInsets.all(20),
@@ -51,10 +53,14 @@ class AdminMenuScreen extends StatelessWidget {
           _buildButton("Dashboard", () {}),
           const SizedBox(height: 16),
 
-          _buildButton("Pending Company Requests", () {}),
+          _buildButton("Pending Company Requests", () {
+            Navigator.pushNamed(context, '/admin/pending-requests');
+          }),
           const SizedBox(height: 16),
 
-          _buildButton("Pending Posts", () {}),
+          _buildButton("Pending Posts", () {
+            Navigator.pushNamed(context, '/admin/pending-posts');
+          }),
         ],
       ),
 

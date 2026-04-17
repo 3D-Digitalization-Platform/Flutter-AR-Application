@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import '../service/auth_feature_service.dart';
+import 'widgets/auth_field.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  final AuthFeatureService _authService = AuthFeatureService();
+
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // 🔵 الخلفية
+          // 🔵 Background
           Container(
             height: 300,
             decoration: const BoxDecoration(
@@ -91,12 +95,12 @@ class LoginScreen extends StatelessWidget {
                           const SizedBox(height: 20),
 
                           // Email
-                          field("User@gmail.com"),
+                          commonField("User@gmail.com"),
 
                           const SizedBox(height: 12),
 
                           // Password
-                          field("******", isPassword: true),
+                          commonField("******", isPassword: true),
 
                           const SizedBox(height: 10),
 
@@ -120,7 +124,9 @@ class LoginScreen extends StatelessWidget {
                             width: double.infinity,
                             height: 50,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _authService.login("test@test.com", "password");
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
                                     const Color(0xFF6C8FCB),
@@ -143,7 +149,9 @@ class LoginScreen extends StatelessWidget {
                               const Text(
                                   "Don't have an account? "),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/signup');
+                                },
                                 child: const Text("Sign Up"),
                               ),
                             ],
@@ -160,20 +168,4 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-// 🔹 TextField
-Widget field(String hint, {bool isPassword = false}) {
-  return TextField(
-    obscureText: isPassword,
-    decoration: InputDecoration(
-      hintText: hint,
-      filled: true,
-      fillColor: const Color(0xFFF5F6FA),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
-      ),
-    ),
-  );
 }
