@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import '../../../core/config/env_config.dart';
 import '../model/profile_model.dart';
 
 // TODO: Implement ProfileService (switch to real backend later)
@@ -10,8 +10,8 @@ class ProfileService {
 
   Future<ProfileModel?> getProfile(String userId) async {
     try {
-      // TODO: Replace with real backend endpoint when available
-      final url = Uri.parse('https://dummyjson.com/users/$userId');
+      // ✅ Using EnvConfig for the base URL
+      final url = Uri.parse('${EnvConfig.baseUrl}/users/$userId');
 
       final response = await http.get(
         url,
