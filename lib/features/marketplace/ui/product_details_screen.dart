@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/utils/image_utils.dart';
 import '../model/product_model.dart';
 import '../service/marketplace_service.dart';
 
@@ -92,7 +93,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Center(child: Image.asset(product.image, height: 200)),
+                    child: Center(child: ImageUtils.buildImage(product.image, height: 200)),
                   ),
                   const SizedBox(height: 20),
                   Padding(

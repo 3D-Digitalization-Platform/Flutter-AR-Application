@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/utils/image_utils.dart';
 
 class ProductCard extends StatelessWidget {
   final String name;
@@ -39,7 +40,7 @@ class ProductCard extends StatelessWidget {
                 color: Colors.grey.shade200,
               ),
               child: Center(
-                child: Image.asset(image, fit: BoxFit.cover),
+                child: ImageUtils.buildImage(image, fit: BoxFit.cover),
               ),
             ),
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/utils/image_utils.dart';
 
 class PostCard extends StatelessWidget {
   final String title;
@@ -47,14 +48,11 @@ class PostCard extends StatelessWidget {
           const SizedBox(height: 10),
 
           // 🖼 Image
-          ClipRRect(
+          ImageUtils.buildImage(
+            image,
+            height: 200,
+            width: double.infinity,
             borderRadius: BorderRadius.circular(20),
-            child: Image.asset(
-              image,
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
           ),
 
           const SizedBox(height: 10),
