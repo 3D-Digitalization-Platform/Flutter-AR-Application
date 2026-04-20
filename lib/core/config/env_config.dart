@@ -3,12 +3,7 @@ class EnvConfig {
   /// 🌐 TODO Add static env variables here
   /// 🌐 Backend API URL
   /// Change this to your production URL when ready
-  static const String baseUrl = "https://dummyjson.com";
-
-  /// 🔑 Static Secrets / API Keys
-  /// IMPORTANT: For highly sensitive keys, consider using secure storage
-  /// or building with --dart-define for production.
-  static const String apiKey = "YOUR_SECURE_API_KEY_HERE";
+  static const String baseUrl = "http://localhost:5109";
 
   /// 🛠 Environment Mode
   static const bool isDevelopment = true;
