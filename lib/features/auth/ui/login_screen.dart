@@ -2,10 +2,56 @@ import 'package:flutter/material.dart';
 import '../service/auth_feature_service.dart';
 import 'widgets/auth_field.dart';
 
-class LoginScreen extends StatelessWidget {
-  final AuthFeatureService _authService = AuthFeatureService();
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
-  LoginScreen({super.key});
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final AuthFeatureService _authService = AuthFeatureService();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _rememberMe = false;
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final user = await _authService.login(
+        _emailController.text.trim(),
+        _passwordController.text,
+        rememberMe: _rememberMe,
+      );
+
+      if (user != null && mounted) {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = "Invalid email or password. Please try again.";
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +126,8 @@ class LoginScreen extends StatelessWidget {
                           const SizedBox(height: 20),
 
                           // OR
-                          Row(
-                            children: const [
+                          const Row(
+                            children: [
                               Expanded(child: Divider()),
                               Padding(
                                 padding:
@@ -94,20 +140,46 @@ class LoginScreen extends StatelessWidget {
 
                           const SizedBox(height: 20),
 
+                          if (_errorMessage != null)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                _errorMessage!,
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            ),
+
                           // Email
-                          commonField("User@gmail.com"),
+                          commonField(
+                            "User@gmail.com",
+                            controller: _emailController,
+                            hasError: _errorMessage != null,
+                            keyboardType: TextInputType.emailAddress,
+                          ),
 
                           const SizedBox(height: 12),
 
                           // Password
-                          commonField("******", isPassword: true),
+                          commonField(
+                            "******",
+                            isPassword: true,
+                            controller: _passwordController,
+                            hasError: _errorMessage != null,
+                          ),
 
                           const SizedBox(height: 10),
 
                           // Remember + Forgot
                           Row(
                             children: [
-                              Checkbox(value: false, onChanged: (v) {}),
+                              Checkbox(
+                                value: _rememberMe,
+                                onChanged: (v) {
+                                  setState(() {
+                                    _rememberMe = v ?? false;
+                                  });
+                                },
+                              ),
                               const Text("Remember me"),
                               const Spacer(),
                               TextButton(
@@ -124,9 +196,7 @@ class LoginScreen extends StatelessWidget {
                             width: double.infinity,
                             height: 50,
                             child: ElevatedButton(
-                              onPressed: () {
-                                _authService.login("test@test.com", "password");
-                              },
+                              onPressed: _isLoading ? null : _handleLogin,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
                                     const Color(0xFF6C8FCB),
@@ -135,7 +205,9 @@ class LoginScreen extends StatelessWidget {
                                       BorderRadius.circular(12),
                                 ),
                               ),
-                              child: const Text("Log In"),
+                              child: _isLoading
+                                  ? const CircularProgressIndicator(color: Colors.white)
+                                  : const Text("Log In"),
                             ),
                           ),
 
