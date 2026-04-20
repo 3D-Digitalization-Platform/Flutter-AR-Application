@@ -10,6 +10,8 @@ import 'features/admin/ui/admin_home_screen.dart';
 import 'features/admin/ui/admin_pending_requests.dart';
 import 'features/admin/ui/admin_pending_posts.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() {
   runApp(const MyApp());
 }
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {

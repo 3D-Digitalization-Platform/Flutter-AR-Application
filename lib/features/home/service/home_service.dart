@@ -1,13 +1,20 @@
+import '../../../core/auth/auth_service.dart';
 import '../model/post_model.dart';
 
-// TODO: Implement HomeService
 class HomeService {
-  // TODO: Enable when JWT is implemented
-  final bool useAuth = false;
+  final AuthService _authService = AuthService();
+  String? token;
+
+  HomeService() {
+    _loadToken();
+  }
+
+  Future<void> _loadToken() async {
+    token = await _authService.getToken();
+  }
 
   Future<List<PostModel>> getPosts() async {
-    // TODO: Implement getPosts logic
-    // TODO: Attach JWT token to headers when useAuth = true
+    // TODO: Implement getPosts logic using _authService.dio
     return [
       PostModel(
         id: "1",

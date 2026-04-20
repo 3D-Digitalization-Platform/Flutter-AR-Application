@@ -1,15 +1,43 @@
 import 'package:dio/dio.dart';
+import '../../main.dart';
 import '../config/env_config.dart';
 import '../storage/secure_storage_service.dart';
 
 class AuthService {
-  final Dio _dio = Dio(BaseOptions(
-    baseUrl: EnvConfig.baseUrl,
-    connectTimeout: const Duration(milliseconds: EnvConfig.connectTimeout),
-    receiveTimeout: const Duration(milliseconds: EnvConfig.receiveTimeout),
-  ));
-
+  late final Dio _dio;
   final SecureStorageService _storageService = SecureStorageService();
+  String? token;
+
+  AuthService() {
+    _dio = Dio(BaseOptions(
+      baseUrl: EnvConfig.baseUrl,
+      connectTimeout: const Duration(milliseconds: EnvConfig.connectTimeout),
+      receiveTimeout: const Duration(milliseconds: EnvConfig.receiveTimeout),
+    ));
+
+    _dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        if (token == null) {
+          await loadToken();
+        }
+        if (token != null) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
+        return handler.next(options);
+      },
+      onError: (DioException e, handler) async {
+        if (e.response?.statusCode == 401) {
+          await logout();
+          navigatorKey.currentState?.pushNamedAndRemoveUntil('/', (route) => false);
+        }
+        return handler.next(e);
+      },
+    ));
+  }
+
+  Future<void> loadToken() async {
+    token = await _storageService.getToken();
+  }
 
   Future<Response> signup({
     required String firstName,
@@ -53,8 +81,8 @@ class AuthService {
       );
 
       if (response.statusCode == 200) {
-        final token = response.data['token'];
-        await _storageService.saveToken(token);
+        token = response.data['token'];
+        await _storageService.saveToken(token!);
       }
     } on DioException catch (e) {
       rethrow;
@@ -62,15 +90,21 @@ class AuthService {
   }
 
   Future<void> logout() async {
+    token = null;
     await _storageService.deleteToken();
   }
 
   Future<String?> getToken() async {
-    return await _storageService.getToken();
+    if (token == null) {
+      await loadToken();
+    }
+    return token;
   }
 
   Future<void> refreshToken() async {
     // TODO: Implement refresh token logic if supported by backend
     // The current API doc doesn't provide a refresh token endpoint.
   }
+
+  Dio get dio => _dio;
 }

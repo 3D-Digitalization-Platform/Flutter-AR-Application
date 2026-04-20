@@ -1,20 +1,26 @@
-// TODO: Implement AdminService
+import '../../../core/auth/auth_service.dart';
+
 class AdminService {
-  // TODO: Enable when JWT is implemented
-  final bool useAuth = false;
+  final AuthService _authService = AuthService();
+  String? token;
+
+  AdminService() {
+    _loadToken();
+  }
+
+  Future<void> _loadToken() async {
+    token = await _authService.getToken();
+  }
 
   Future<void> approvePost(String postId) async {
-    // TODO: Implement approvePost logic
-    // TODO: Attach JWT token to headers when useAuth = true
+    // TODO: Implement approvePost logic using _authService.dio
   }
 
   Future<void> rejectPost(String postId) async {
-    // TODO: Implement rejectPost logic
-    // TODO: Attach JWT token to headers when useAuth = true
+    // TODO: Implement rejectPost logic using _authService.dio
   }
 
   Future<void> approveRequest(String requestId) async {
-    // TODO: Implement approveRequest logic
-    // TODO: Attach JWT token to headers when useAuth = true
+    // TODO: Implement approveRequest logic using _authService.dio
   }
 }

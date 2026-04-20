@@ -3,10 +3,20 @@ import '../model/user_model.dart';
 
 class AuthFeatureService {
   final AuthService _authService = AuthService();
+  String? token;
+
+  AuthFeatureService() {
+    _loadToken();
+  }
+
+  Future<void> _loadToken() async {
+    token = await _authService.getToken();
+  }
 
   Future<UserModel?> login(String email, String password, {bool rememberMe = false}) async {
     try {
       await _authService.login(email: email, password: password, rememberMe: rememberMe);
+      token = await _authService.getToken();
       // For now, returning a dummy UserModel as the API only returns a token.
       // In a real app, you might fetch user details using the token.
       return UserModel(id: '1', email: email, name: 'User');

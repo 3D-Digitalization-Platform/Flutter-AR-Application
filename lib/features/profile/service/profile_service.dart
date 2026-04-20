@@ -1,30 +1,25 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../../../core/config/env_config.dart';
+import 'package:dio/dio.dart';
+import '../../../core/auth/auth_service.dart';
 import '../model/profile_model.dart';
 
-// TODO: Implement ProfileService (switch to real backend later)
 class ProfileService {
-  // TODO: Enable when JWT is implemented
-  final bool useAuth = false;
+  final AuthService _authService = AuthService();
+  String? token;
+
+  ProfileService() {
+    _loadToken();
+  }
+
+  Future<void> _loadToken() async {
+    token = await _authService.getToken();
+  }
 
   Future<ProfileModel?> getProfile(String userId) async {
     try {
-      // ✅ Using EnvConfig for the base URL
-      final url = Uri.parse('${EnvConfig.baseUrl}/users/$userId');
-
-      final response = await http.get(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-
-          // TODO: Attach JWT token to headers when useAuth = true
-          if (useAuth) 'Authorization': 'Bearer YOUR_TOKEN',
-        },
-      );
+      final response = await _authService.dio.get('/users/$userId');
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final data = response.data;
 
         // TODO: Map API response properly when backend schema is finalized
         return ProfileModel(

@@ -1,13 +1,20 @@
+import '../../../core/auth/auth_service.dart';
 import '../model/product_model.dart';
 
-// TODO: Implement MarketplaceService
 class MarketplaceService {
-  // TODO: Enable when JWT is implemented
-  final bool useAuth = false;
+  final AuthService _authService = AuthService();
+  String? token;
+
+  MarketplaceService() {
+    _loadToken();
+  }
+
+  Future<void> _loadToken() async {
+    token = await _authService.getToken();
+  }
 
   Future<List<ProductModel>> getProducts() async {
-    // TODO: Implement getProducts logic
-    // TODO: Attach JWT token to headers when useAuth = true
+    // TODO: Implement getProducts logic using _authService.dio
     return [
       ProductModel(
         id: "1",
