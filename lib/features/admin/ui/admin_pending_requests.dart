@@ -1,27 +1,35 @@
 import 'package:flutter/material.dart';
+import '../service/admin_service.dart';
 
 class PendingRequestsScreen extends StatelessWidget {
-  const PendingRequestsScreen({super.key});
+  final AdminService _adminService = AdminService();
+
+  PendingRequestsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // TODO: Fetch companies using AdminService
     final List<Map<String, String>> companies = [
       {
+        "id": "1",
         "name": "Cuong Duyen Ceramics",
         "email": "Cuong.Duyen@gmail.com",
         "logo": "assets/logos/company1.png"
       },
       {
+        "id": "2",
         "name": "Ikea",
         "email": "Ikea@gmail.com",
         "logo": "assets/logos/company2.png"
       },
       {
+        "id": "3",
         "name": "Porsche",
         "email": "Porsche@gmail.com",
         "logo": "assets/logos/company3.png"
       },
       {
+        "id": "4",
         "name": "Aston Martin",
         "email": "Aston.Martin@gmail.com",
         "logo": "assets/logos/company4.png"
@@ -35,7 +43,10 @@ class PendingRequestsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFFE9EDF3),
         elevation: 0,
-        leading: const Icon(Icons.arrow_back, color: Colors.black),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
         centerTitle: true,
         title: const Text(
           "Company Requests",
@@ -66,11 +77,14 @@ class PendingRequestsScreen extends StatelessWidget {
             onDetailsTap: () {
               // TODO: Navigate to details screen
             },
+            onApprove: () {
+              _adminService.approveRequest(company["id"]!);
+            },
           );
         },
       ),
 
-      /// 🔹 Bottom Nav (same as previous screen)
+      /// 🔹 Bottom Nav
       bottomNavigationBar: Container(
         height: 70,
         decoration: const BoxDecoration(
@@ -93,11 +107,13 @@ class PendingRequestsScreen extends StatelessWidget {
     );
   }
 }
+
 class CompanyCard extends StatelessWidget {
   final String name;
   final String email;
   final String logo;
   final VoidCallback onDetailsTap;
+  final VoidCallback onApprove;
 
   const CompanyCard({
     super.key,
@@ -105,6 +121,7 @@ class CompanyCard extends StatelessWidget {
     required this.email,
     required this.logo,
     required this.onDetailsTap,
+    required this.onApprove,
   });
 
   @override
@@ -118,7 +135,6 @@ class CompanyCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-
           /// 🔹 Logo
           CircleAvatar(
             radius: 25,
@@ -148,20 +164,39 @@ class CompanyCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
 
-                /// 🔹 Details Button
-                SizedBox(
-                  height: 36,
-                  child: ElevatedButton(
-                    onPressed: onDetailsTap,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF5E8FD6),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                /// 🔹 Buttons Row
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                        onPressed: onDetailsTap,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF5E8FD6),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Text("Details"),
                       ),
-                      elevation: 0,
                     ),
-                    child: const Text("Details"),
-                  ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                        onPressed: onApprove,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Text("Approve"),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

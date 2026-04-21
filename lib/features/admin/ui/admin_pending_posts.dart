@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import '../service/admin_service.dart';
 
 class PendingPostsScreen extends StatelessWidget {
-  const PendingPostsScreen({super.key});
+  final AdminService _adminService = AdminService();
+
+  PendingPostsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // TODO: Fetch posts using AdminService
     final posts = [
       {
+        "id": "1",
         "company": "Cuong Duyen Ceramics",
         "logo": "assets/logos/company1.png",
         "image": "assets/posts/post1.png",
       },
       {
+        "id": "2",
         "company": "IKEA",
         "logo": "assets/logos/company2.png",
         "image": "assets/posts/post2.png",
@@ -25,7 +31,10 @@ class PendingPostsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFFE9EDF3),
         elevation: 0,
-        leading: const Icon(Icons.arrow_back, color: Colors.black),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
         centerTitle: true,
         title: const Text(
           "Company Posts",
@@ -54,10 +63,10 @@ class PendingPostsScreen extends StatelessWidget {
             logo: post["logo"]!,
             image: post["image"]!,
             onApprove: () {
-              // TODO: approve logic
+              _adminService.approvePost(post["id"]!);
             },
             onReject: () {
-              // TODO: reject logic
+              _adminService.rejectPost(post["id"]!);
             },
           );
         },
@@ -86,6 +95,7 @@ class PendingPostsScreen extends StatelessWidget {
     );
   }
 }
+
 class PostCard extends StatelessWidget {
   final String companyName;
   final String logo;
@@ -114,7 +124,6 @@ class PostCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           /// 🔹 Company Row
           Row(
             children: [
